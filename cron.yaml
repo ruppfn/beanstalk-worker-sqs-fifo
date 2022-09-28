@@ -1,0 +1,8 @@
+version: 1
+cron: 
+  - name: "task1"
+    url: "/scheduled"
+    schedule: "* * * * *"
+  - name: "ping"
+    url: "/ping"
+    schedule: "* * * * *"
