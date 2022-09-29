@@ -21,3 +21,13 @@ resource "aws_lambda_function" "lambda" {
     }
   }
 }
+
+resource "aws_lambda_permission" "tasks" {
+  for_each      = module.events.rules_arn
+  statement_id  = "AllowExecutionFromCloudWatch-${each.key}"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda.function_name
+  principal     = "events.amazonaws.com"
+
+  source_arn = each.value
+}
