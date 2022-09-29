@@ -29,5 +29,8 @@ override.tf.json
 # example: *tfplan*
 
 example-worker-code/node_modules
+lambda/node_modules
+
+dist/
 
 .idea/
