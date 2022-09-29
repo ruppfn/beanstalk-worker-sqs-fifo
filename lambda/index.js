@@ -6,22 +6,28 @@ const sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
 const SQS_QUEUE_URL = process.env.SQS_QUEUE_URL;
 
-const params = {
+const makeParams = (url, deduplicationId) => ({
     MessageAttributes: {
         "app-path": {
             DataType: "String",
-            StringValue: "/ping"
+            StringValue: url
         }
     },
-    MessageBody: "Information about current NY Times fiction bestseller for week of 12/11/2016.",
-    MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
-    MessageGroupId: "Group1",  // Required for FIFO queues
+    MessageBody: "a", // Requires at least 1 char
+    MessageDeduplicationId: deduplicationId,  // Required for FIFO queues
+    MessageGroupId: url,  // Required for FIFO queues
     QueueUrl: SQS_QUEUE_URL
-};
+});
 
-exports.handler =  async function(event, context) {
-    console.log("EVENT: \n" + JSON.stringify(event, null, 2));
-    console.log("CONTEXT: \n" + JSON.stringify(context, null, 2));
+exports.handler =  async function(event) {
+    const url = event.url;
+    if (!url) throw new Error("url is not provided");
+
+    const deduplicationId = `${url}-${new Date().getMinutes()}`;
+    const params = makeParams(url, deduplicationId);
+
     await sqs.sendMessage(params).promise();
-    return context.logStreamName;
+
+    console.log(`Finished. url: ${url} | deduplicationId: ${deduplicationId}`);
+
 }
