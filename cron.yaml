@@ -2,7 +2,7 @@ version: 1
 cron: 
   - name: "task1"
     url: "/scheduled"
-    schedule: "* * * * *"
+    schedule: "*/2 * ? * * *"
   - name: "ping"
     url: "/ping"
-    schedule: "* * * * *"
+    schedule: "*/1 * ? * * *"
