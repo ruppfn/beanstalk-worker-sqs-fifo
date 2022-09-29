@@ -1,5 +1,5 @@
 locals {
-  crons = yamldecode(file("./cron.yaml")).cron
+  crons = yamldecode(file("../cron.yaml")).cron
 }
 
 module "events" {
